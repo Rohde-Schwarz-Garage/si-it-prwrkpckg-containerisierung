@@ -164,7 +164,7 @@ Weitere Informationen über Docker und wie man es verwenden kann findest du [hie
 
 #### Schritt 3: IP-Adresse herausfinden
 
-Um die Oberfläche von Portainer öffnen zu können, benötigst du die IP-Adresse des Raspberry Pis. Wie du diese herausfindest, kannst du in der [Raspberry Pi Einführung](../../../ge-it-prwrkpckg-raspberrypi) nachlesen. Wenn du auf dem Pi direkt arbeitest, kannst du `localhost` verwenden.
+Um die Oberfläche von Portainer öffnen zu können, benötigst du die IP-Adresse des Raspberry Pis. Wie du diese herausfindest, kannst du in der [Raspberry Pi Einführung](../../../ge-it-prwrkpckg-raspberrypi#ip-adresse-herausfinden) nachlesen. Wenn du auf dem Pi direkt arbeitest, kannst du `localhost` verwenden.
 
 
 #### Schritt 4: Mit Portainer verbinden
