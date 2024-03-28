@@ -1,17 +1,8 @@
 # Container - Isolation von Anwendungen
 
-```csharp
-if (readDocuments.ContainsAll({
-    "Einleitungsdokument",
-    "RaspberryPi",
-    "Webserver"
-    "AdGuard Home",
-})) {
-    continue;
-} else {
-    return;
-}
-```
+Dieses Projekt ist Teil des [Pre-Work-Pakets](../../../collection-it-prwrkpckg).
+
+Es baut auf der [Raspberry Pi Einführung](../../../ge-it-prwrkpckg-raspberrypi), dem [Webserver-Projekt](../../../si-it-prwrkpckg-webserver) und dem [AdGuard Home-Projekt](../../../si-it-prwrkpckg-adguard) auf.
 
 ## Inhaltsverzeichnis
 
@@ -25,13 +16,13 @@ if (readDocuments.ContainsAll({
     - [Erstellen eines nginx-Containers](#erstellen-eines-nginx-containers)
 
 ## Einleitung
-In den bisherigen Anleitungen hast du erfahren, wie man einen [Webserver](../Webserver/) bzw. [AdGuard Home](<../AdGuard Home/>) auf [Raspberry Pi](<../Raspberry Pi/>) OS aufsetzt.  
+In den oben genannten Anleitungen hast du erfahren, wie man einen Webserver bzw. AdGuard Home auf einem Raspberry Pi aufsetzt.  
 Dieser Leitfaden baut auf diesem Wissen auf und zeigt dir, wie du diese Anwendungen auf dem gleichen System, aber voneinander isoliert, aufsetzen kannst. 
 
 
 ## Einführung in die Virtualisierung
 
-Möchte man mehrere Services, wie beispielsweise einen Webserver und AdGuard gleichzeitig laufen lassen, hat man verschiedene Möglichkeiten:
+Möchte man mehrere Services, wie beispielsweise einen Webserver und AdGuard, gleichzeitig laufen lassen, hat man verschiedene Möglichkeiten:
 
 
 ### a) Alles auf einem Server
@@ -60,12 +51,12 @@ Trotzdem haben sie auch ihre Anwendungsfälle.
 
 Der geeignetere Lösungsansatz ist in vielen Fällen die Verwendung von Containern.
 
-Container sind ähnlich wie VMs, jedoch benötigen sie zum Laufen kein eigenes Betriebssystem/Kernel. Es muss also keine neue Hardwareumgebung emuliert werden, sondern es können einfach die Umgebung / Bibliotheken des Hostsystems verwendet werden. Somit wird viel Rechenleistung gespart.
-Generell sind Container von der Hostmaschine isoliert, es können aber auch bestimmte Schnittstellen, wie beispielsweise Ordner, festgelegt werden, über die mit ihnen kommuniziert werden kann.
+Container sind ähnlich zu VMs, benötigen jedoch zum Laufen kein eigenes Betriebssystem/Kernel. Es muss also keine neue Hardwareumgebung emuliert werden, sondern es werden einfach die Umgebung und Bibliotheken (= Sammlung von Funktionen, die von anderen Programmen verwendet werden können) des Hostsystems verwendet. Somit spart man sich viel Rechenleistung.
+Generell sind Container von der Hostmaschine isoliert, es können aber auch bestimmte Schnittstellen, wie beispielsweise Ordner, festgelegt werden, über die mit ihnen kommuniziert werden kann. Gibt man bei ihrer Erstellung nichts explizit an, können Container nicht nach außen kommunizieren und sind komplett vom Rest des Systems abgeschottet.
 
-Zusätzlich gibt es bei Containern keine Bindung an bestimmte Betriebssysteme. Läuft ein Container auf Linux, läuft er auch ohne Probleme auf Windows oder MacOS. Im Internet gibt es viele bereits vorgefertigte Container, die verwendet werden können. So lässt sich zum Beispiel sehr einfach und schnell ein Webserver aufsetzen (siehe weiter unten).
+Im Internet gibt es viele bereits vorgefertigte Container, die verwendet werden können. So lässt sich zum Beispiel sehr einfach und schnell AdGuard Home aufsetzen (siehe weiter unten).
 
-Hier muss angemerkt werden, dass Container nicht immer die beste Lösung sind.
+Hier muss angemerkt werden, dass Container nicht immer die beste Lösung sind. Anwendungen, die nur unter Windows lauffähig sind, lassen sich zum Beispiel nicht mit Hilfe von Containern auf einem Linux-System ausführen. Hier wäre eine virtuelle Maschine nötig. 
 
 
 ## Inhalt dieses Dokuments
@@ -86,14 +77,15 @@ Für diese Anleitung bietet es sich an, Raspberry Pi OS neu zu installieren, da 
 
 ### Images
 
-Docker-Images sind Anweisungen, um einen Docker Container zu erstellen. Man kann Images von anderen Entwicklern verwenden oder selbst welche schreiben. Für die Erstellung eines eigenen Images wird ein Dockerfile verwendet, das die Anweisungen festlegt, die Docker beim Erstellen des Containers abarbeitet. 
+Docker-Images sind Anweisungen, um einen Docker-Container zu erstellen. Man kann Images von anderen Entwicklern verwenden oder selbst welche bauen. Für die Erstellung eines eigenen Images wird ein Dockerfile verwendet, das die Anweisungen festlegt, die Docker beim Erstellen des Containers abarbeitet. 
 
-Images sind betriebssystemunabhängig, können also auf jedem PC, auf dem Docker läuft, verwendet werden.
+Jedes Image, das auf einer spezifischen Hard- / Softwareumgebung erstellt wurde, läuft auch ohne Probleme auf ähnlichen Systemen. Man kann Linux-Container auf anderen Linux-System laufen lassen und Windows-Container auf anderen Windows-Maschinen. Auch die Prozessorarchitektur ([ARM](https://de.wikipedia.org/wiki/Arm-Architektur) oder [x86](https://de.wikipedia.org/wiki/X86-Architektur)) ist für die Images relevant.
+Bei großen Projekten gibt es oft mehrere Images: Jeweils eines für die gängigsten Hardware- und Softwarekombinationen.
 
 
 ### Container
 
-Container sind eine ausführbare Instanz eines Images. Bei ihrer Erstellung hat man viele Konfigurationsoptionen zur Auswahl. Beispielsweise kann man Ports des Hostsystems an den Container weiterleiten (*publishen*) und Volumes zum persistenten Speichern von Daten einbinden.
+Container sind eine ausführbare Instanz eines Images. Bei ihrer Erstellung hat man viele Konfigurationsoptionen zur Auswahl. Beispielsweise kann man Ports des Hostsystems an den Container weiterleiten (*publishen*) und Volumes zum persistenten Speichern von Daten einbinden. 
 Wie bereits oben beschrieben wurde, bietet ein Container viele Vorteile, wie die Isolation von anderen Anwendungen und Ressourcen, die ihm nicht zugewiesen sind.
 
 
@@ -101,11 +93,11 @@ Wie bereits oben beschrieben wurde, bietet ein Container viele Vorteile, wie die
 
 Manche Container benötigen *persistenten* Speicher (also Speicher, der beim Herunterfahren des Rechners nicht verloren geht). Um dies zu gewährleisten, gibt es die sog. [*Volumes*](https://docs.docker.com/storage/volumes/). 
 
-Volumes sind Speicherorte, die von Docker verwaltet werden und sich außerhalb des Host-Dateisystems befinden. Um sie zu verwenden kann man sie  Containern bei ihrer Erstellung zuweisen, die sie dann zum dauerhaften Speichern von Daten verwenden können. Ohne diese Zuweisung kann kein Container auf die Volumes zugreifen.
+Volumes sind Speicherorte, die von Docker verwaltet werden und sich außerhalb des Host-Dateisystems befinden. Um sie zu verwenden, kann man sie Containern bei ihrer Erstellung zuweisen, die sie dann zum dauerhaften Speichern von Daten verwenden können. Ohne diese Zuweisung kann kein Container auf die Volumes zugreifen.
 
 Die Isolation von Volumes sorgt dafür, dass kein anderer Prozess die Dateien, die der Container benötigt, verwenden / bearbeiten kann. 
 
-Neben den herkömmlichen Volumes gibt es bei Docker noch die sog. bind-Mounts. Anstatt Docker die Verantwortung für den Speicher zu übertragen, übergibt man Containern einfach einen Ordner auf seinem Host-System, in dem dieser dann arbeitet. 
+Neben den herkömmlichen Volumes gibt es bei Docker noch die sog. bind-Mounts. Anstatt Docker die Verantwortung für den Speicher zu übertragen, übergibt man Containern einfach einen Ordner auf seinem Host-System, mit dem dieser dann arbeiten kann. 
 
 
 ## Docker-Setup
@@ -172,13 +164,7 @@ Weitere Informationen über Docker und wie man es verwenden kann findest du [hie
 
 #### Schritt 3: IP-Adresse herausfinden
 
-Es gibt zwei einfache Möglichkeiten, wie du die IP-Adresse deines Raspberry Pis herausfinden kannst:  
-1. Über das Webinterface deines WLAN-Routers (bei Fritzboxen von AVM beispielsweise über die Adresse `fritz.box` im Browser)
-2. Über den `ifconfig` Befehl in der Konsole. (Alternativ auch `hostname -I`)
-
-![ifconfig](rsc/RPI-ifconfig.png)
-
-
+Um die Oberfläche von Portainer öffnen zu können, benötigst du die IP-Adresse des Raspberry Pis. Wie du diese herausfindest, kannst du in der [Raspberry Pi Einführung](../../../ge-it-prwrkpckg-raspberrypi) nachlesen. Wenn du auf dem Pi direkt arbeitest, kannst du `localhost` verwenden.
 
 
 #### Schritt 4: Mit Portainer verbinden
@@ -195,7 +181,7 @@ http://<ip-address>:9000
 
 Nun musst du nur noch einen Benutzer erstellen, mit dem du dich anmelden kannst.
 
-Wenn alles funktioniert hat, kannst du die Portainer-Übersicht sehen:
+Wenn alles funktioniert hat, solltest du einen Einführungsbildschirm sehen. Hier kannst du auf "Get Started" drücken, um zur Portainer-Übersicht zu gelangen:
 
 ![Main Menu](rsc/Portainer-MainMenu.png "Main Menu")
 
@@ -203,6 +189,7 @@ Nun musst du nur noch einmal auf local klicken und du erreichst die Containerver
 
 ![Environmentübersicht](rsc/Portainer-Overview.png "Generelle Übersicht")
 
+**Disclaimer**: Während der Nutzung von Portainer kann es passieren, dass Probleme auftreten oder Fehlermeldungen nicht genau genug angezeigt werden. Deshalb wird Docker häufig trotz der komplizierteren Bedienung über das Terminal angesteuert. Insbesondere für Anfänger ist Portainer aber ein sehr guter Einstieg in die Containerisierung.
 
 ### Erstellen eines AdGuard Home-Containers
 
@@ -231,7 +218,7 @@ Bei Image trägst du "*adguard/adguardhome*" ein.
 Unter "Network ports configuration" kannst du manuell Ports "publishen". 
 AdGuard Home benötigt die Ports 80, 53 und 3000.
 
-Da im weiteren Verlauf aber noch ein Webserver eingebunden werden soll, der Port 80 verwendet, musst du die Zuweisung anpassen.
+Da im weiteren Verlauf aber noch ein Webserver aufgesetzt werden soll, der Port 80 verwendet, musst du die Port-Zuweisung für das AdGuard-Dashboard anpassen.
 Statt Port 80 kannst du also einfach Port 3001 verwenden.
 
 Gepublisht werden müssen also 3001:3001/tcp, 53:53/tcp, 53:53/udp und 3000:3000/tcp:
@@ -247,24 +234,29 @@ Zu guter Letzt kannst du unter `Advanced container settings` -> `Restart policy`
 
 Jetzt kannst du auf `Deploy the container` drücken und dein Container wird automatisch erstellt und gestartet.
 
-Die Einrichtung erfolgt wie in der dedizierten [AdGuard Home](<../AdGuard Home>)-Anleitung.
-Achte nur darauf, dass du auf der Konfigurationsseite 2 bei der Auswahl des Ports, auf dem das Admin Web Interface laufen soll, Port 3001 angibst, da das der Port ist, den du vorher gepublisht hast.
+Die Einrichtung erfolgt wie im dedizierten [AdGuard Home](../../../si-it-prwrkpckg-adguard)-Projekt.
+Achte nur darauf, dass du auf der Konfigurationsseite 2 bei der Auswahl des Ports, auf dem das Dashboard ("Admin Web Interface") laufen soll, Port 3001 angibst, da das der Port ist, den du vorher gepublisht hast.
 
 ### Erstellen eines nginx-Containers
 
 Das Erstellen des nginx-Containers läuft sehr ähnlich ab, wie das Erstellen des AdGuard-Containers, weshalb hier auf Bilder verzichtet wird.
 
-Das Image heißt `nginx`.
-Der Port, der gepublisht werden muss, ist 80:80/tcp.
+Du musst für nginx in diesem Projekt kein eigenes Volume erstellen. Du kannst also gleich zur Containererstellung übergehen.
+
+Hier die Parameter, die du bei der Containererstellung eingeben musst:
+- Name: "nginx"
+- Image: `nginx`
+- Ports, die gepublisht werden muss: 80:80/tcp.
 
 Bei nginx bietet sich ein bind-Mount an, da man die Website-Dateien dann leicht live bearbeiten kann. Hierzu wählst du unter `Advanced container settings` -> `Volume` bei der Erstellung des Containers statt `Volume` die Option `Bind` aus und trägst einen Ordner ein, der auf dem Host-System liegt (beispielsweise `/var/www`). Es kann sein, dass du den Ordner erst noch erstellen musst.
-Der Webseiten-Ordner im Container heißt bei nginx `/usr/share/nginx/html`
+Achtung: das Container-Image von nginx verwendet statt dem `var/www/html`-Ordner den `/usr/share/nginx/html`-Ordner. 
 (Beim Host also "/var/www" eintragen und beim Container "/usr/share/nginx/html").
 
 Falls nginx nicht die Rechte besitzt, um die Dateien im freigegebenen Ordner zu lesen / auszuführen, musst du die Zugriffsrechte des Ordners (und aller darunterliegenden Dateien) ändern. Das erreichst du mit dem Befehl `sudo chmod -R 755 /var/www`.
 
 Fügst du nun eine index.html-Datei in den Ordner ein, kannst du, wenn du die IP des Raspberry Pis in den Browser eingegeben hast (mit http:// davor), deine Website sehen.
 
+Hinweis: Mit dem aktuellen Aufbau kann nur die Hauptseite gehostet werden. Wenn du weitere Seiten hinzufügen möchtest, sind weitere Schritte nötig.
 
 ## Abschluss
 
