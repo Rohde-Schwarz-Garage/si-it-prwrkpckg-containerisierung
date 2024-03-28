@@ -12,7 +12,7 @@ Es baut auf der [Raspberry Pi Einführung](../../../ge-it-prwrkpckg-raspberrypi)
 4. [Docker-Setup](#docker-setup)
     - [Docker](#docker)
     - [Portainer](#portainer)
-    - [Erstellen eines AdGuard-Containers](#erstellen-eines-adguard-containers)
+    - [Erstellen eines AdGuard-Containers](#erstellen-eines-adguard-home-containers)
     - [Erstellen eines nginx-Containers](#erstellen-eines-nginx-containers)
 
 ## Einleitung
