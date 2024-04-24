@@ -183,11 +183,11 @@ Nun musst du nur noch einen Benutzer erstellen, mit dem du dich anmelden kannst.
 
 Wenn alles funktioniert hat, solltest du einen Einführungsbildschirm sehen. Hier kannst du auf "Get Started" drücken, um zur Portainer-Übersicht zu gelangen:
 
-![Main Menu](rsc/Portainer-MainMenu.png "Main Menu")
+![Main Menu](img/Portainer-MainMenu.png "Main Menu")
 
 Nun musst du nur noch einmal auf local klicken und du erreichst die Containerverwaltung.
 
-![Environmentübersicht](rsc/Portainer-Overview.png "Generelle Übersicht")
+![Environmentübersicht](img/Portainer-Overview.png "Generelle Übersicht")
 
 **Disclaimer**: Während der Nutzung von Portainer kann es passieren, dass Probleme auftreten oder Fehlermeldungen nicht genau genug angezeigt werden. Deshalb wird Docker häufig trotz der komplizierteren Bedienung über das Terminal angesteuert. Insbesondere für Anfänger ist Portainer aber ein sehr guter Einstieg in die Containerisierung.
 
@@ -197,14 +197,14 @@ AdGuard Home benötigt zwei Volumes: ein Data-Volume und ein Config-Volume.
 Diese kannst du im Volume-Tab erstellen.
 In diesem Beispiel werden sie `adguard_data` und `adguard_conf` genannt.
 
-![Volumes](rsc/Adguard-VolumeCreation.png "Volumeerstellung")
+![Volumes](img/Adguard-VolumeCreation.png "Volumeerstellung")
 
 Das Bild zeigt die Konfiguration des `adguard_data` Volumes. Das andere wird genauso erstellt.
 
 Nun kannst du den Container erstellen.
 Hierzu gehst du auf die Container-Seite:
 
-![Containerübersicht](rsc/Portainer-Containers.png "Containerübersicht")
+![Containerübersicht](img/Portainer-Containers.png "Containerübersicht")
 
 Hier klickst du auf "Add Container".
 
@@ -213,7 +213,7 @@ Auf der Seite, die sich öffnet, kannst du verschiedene Einstellungen vornehmen.
 Der Name des Containers ist frei wählbar. In diesem Beispiel wird "*adguard*" verwendet.
 Bei Image trägst du "*adguard/adguardhome*" ein.
 
-![Adguard Home erstellen](rsc/Adguard-Create.png "Adguard-Containererstellung")
+![Adguard Home erstellen](img/Adguard-Create.png "Adguard-Containererstellung")
 
 Unter "Network ports configuration" kannst du manuell Ports "publishen". 
 AdGuard Home benötigt die Ports 80, 53 und 3000.
@@ -223,12 +223,12 @@ Statt Port 80 kannst du also einfach Port 3001 verwenden.
 
 Gepublisht werden müssen also 3001:3001/tcp, 53:53/tcp, 53:53/udp und 3000:3000/tcp:
 
-![Alt text](rsc/Adguard-Ports.png)
+![Alt text](img/Adguard-Ports.png)
 
 
 Unter `Advanced container settings` -> `Volumes` kannst du die Volumes einbinden.
 
-![Volumes](rsc/Adguard-Volumes.png "Volumes")
+![Volumes](img/Adguard-Volumes.png "Volumes")
 
 Zu guter Letzt kannst du unter `Advanced container settings` -> `Restart policy` "Always" einstellen, damit dein Container immer läuft.
 
